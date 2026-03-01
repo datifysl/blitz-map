@@ -3,21 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Map</title>
+<title>Dark Live Map</title>
 
-<link rel="stylesheet" href="style.css">
+<!-- Google Font (Digital Style) -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 
+<!-- Leaflet CSS -->
 <link rel="stylesheet"
  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<!-- Deine CSS Datei -->
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div id="map"></div>
-<div class="info">
-    Geschwindigkeit: <span class="value" id="speed">0</span> km/h
+
+<div class="speed-display">
+    <span id="speed">000</span>
 </div>
 
+<!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- Dein Script -->
 <script src="script.js"></script>
 
 </body>
