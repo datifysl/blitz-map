@@ -19,31 +19,30 @@ body {
 }
 
 /* ===============================
-   DIGITAL SPEED DISPLAY
+   DIGITAL SPEED DISPLAY (unten rechts)
 =================================*/
 
 .speed-display {
     position: absolute;
-    top: 20px;          /* Oben statt unten */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 60px;     /* kleiner */
+    bottom: 20px;        /* unten */
+    right: 20px;         /* rechts */
+    font-size: 40px;      /* kleiner */
     color: #00ff88;
-    letter-spacing: 6px;
+    letter-spacing: 4px;
     text-shadow:
-        0 0 8px rgba(0,255,136,0.8),
-        0 0 20px rgba(0,255,136,0.6),
-        0 0 40px rgba(0,255,136,0.4);
+        0 0 6px rgba(0,255,136,0.8),
+        0 0 15px rgba(0,255,136,0.6),
+        0 0 30px rgba(0,255,136,0.4);
     user-select: none;
-    z-index: 1000;       /* immer vorne */
+    z-index: 1000;        /* immer sichtbar */
 }
 
 /* km/h Text kleiner */
 .speed-display::after {
     content: " km/h";
-    font-size: 30px;
+    font-size: 18px;
     vertical-align: middle;
-    margin-left: 4px;
+    margin-left: 3px;
 }
 
 /* ===============================
@@ -63,5 +62,5 @@ body {
     border-right: 14px solid transparent;
     border-bottom: 24px solid #00ff88;
     filter: drop-shadow(0 0 6px #00ff88);
-    transition: transform 0.15s linear;
+    transition: transform 0.2s ease-out;
 }
