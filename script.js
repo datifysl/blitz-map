@@ -1,45 +1,102 @@
-const barcodeEl = document.getElementById("barcode");
-const qrcodeEl = document.getElementById("qrcode");
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");
-const freqInput = document.getElementById("freqInput");
 
+let audioCtx;
 let interval;
 
-function randomString(length=12) {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let str = "";
-    for(let i=0;i<length;i++){
-        str += chars.charAt(Math.floor(Math.random()*chars.length));
+// Drum-Samples (synthetisch erzeugt)
+function playKick(time) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.setValueAtTime(100, time);
+    osc.type = "sine";
+    gain.gain.setValueAtTime(1, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(time);
+    osc.stop(time + 0.2);
+}
+
+function playSnare(time) {
+    const bufferSize = audioCtx.sampleRate * 0.2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-5 * i / bufferSize);
     }
-    return str;
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.7, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+    noise.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start(time);
 }
 
-function generateCodes() {
-    const codeData = randomString(12);
-    const qrData = randomString(20);
-
-    // Barcode
-    JsBarcode(barcodeEl, codeData, {format: "CODE128", lineColor:"#00d1b2", width:2, height:80, displayValue:true});
-
-    // QR-Code
-    QRCode.toCanvas(qrcodeEl, qrData, {width:150, color:{dark:"#00d1b2", light:"#1c1c1c"}});
+// Hi-Hat
+function playHiHat(time) {
+    const bufferSize = audioCtx.sampleRate * 0.05;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1);
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.3, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+    noise.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start(time);
 }
 
-// Start Button
+// Melodie / Lead
+const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // C Dur
+
+function playLead(time) {
+    const note = notes[Math.floor(Math.random() * notes.length)];
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(note, time);
+    gain.gain.setValueAtTime(0.1, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(time);
+    osc.stop(time + 0.3);
+}
+
+// Generative Sequenz
+function generateBeat() {
+    const now = audioCtx.currentTime;
+    const beatInterval = 0.25; // Viertel-Noten
+    
+    for (let i = 0; i < 16; i++) { // 16 Schritte Loop
+        const time = now + i * beatInterval;
+
+        // Kick auf 1 und 3
+        if (i % 4 === 0 || i % 4 === 2) playKick(time);
+        // Snare auf 2 und 4
+        if (i % 4 === 1 || i % 4 === 3) playSnare(time);
+        // Hi-Hat auf jeden Schritt
+        playHiHat(time);
+        // Lead zufällig
+        if (Math.random() < 0.4) playLead(time);
+    }
+}
+
+// Loop starten
 startBtn.addEventListener("click", () => {
-    const freq = parseFloat(freqInput.value);
-    if(isNaN(freq) || freq <= 0) return;
-
-    clearInterval(interval);
-    generateCodes(); // sofort generieren
-    interval = setInterval(generateCodes, 1000/freq);
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    generateBeat();
+    interval = setInterval(generateBeat, 4000); // ca 16 Schritte pro Loop
 });
 
 // Stop Button
 stopBtn.addEventListener("click", () => {
     clearInterval(interval);
 });
-
-// Erstmal Codes generieren
-generateCodes();
