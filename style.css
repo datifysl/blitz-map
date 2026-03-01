@@ -1,55 +1,47 @@
 body {
     margin: 0;
-    font-family: 'Verdana', sans-serif;
-    background: linear-gradient(135deg, #121212 0%, #1c1c1c 100%);
+    font-family: Arial, sans-serif;
+    background-color: #121212;
     color: #f0f0f0;
     display: flex;
     justify-content: center;
-}
-
-.app-container {
-    width: 95vw;
-    max-width: 720px;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 10px;
+    height: 100vh;
 }
 
-header h1 {
-    font-size: 2rem;
-    color: #00d1b2;
-    margin-bottom: 15px;
+.container {
     text-align: center;
 }
 
-.video-section {
-    position: relative;
-    width: 100%;
-    border-radius: 15px;
-    overflow: hidden;
-    border: 2px solid #333;
+h1 {
+    color: #00d1b2;
+    margin-bottom: 20px;
 }
 
-video, canvas {
-    width: 100%;
-    display: block;
+.codes {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
 }
 
-#status {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.6);
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-weight: bold;
-    color: #00ff94;
+svg, canvas {
+    border: 2px solid #444;
+    padding: 10px;
+    background-color: #1c1c1c;
+}
+
+button {
+    padding: 10px 20px;
     font-size: 1rem;
+    margin-right: 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: #00d1b2;
+    color: #121212;
 }
 
-footer {
-    margin-top: 15px;
+label {
     font-size: 0.9rem;
-    color: #888;
 }
