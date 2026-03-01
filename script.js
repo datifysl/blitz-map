@@ -4,21 +4,21 @@ const stopBtn = document.getElementById("stopBtn");
 let audioCtx;
 let interval;
 
-// Kick Drum
+// Kick Drum tief und rund
 function playKick(time){
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.frequency.setValueAtTime(60 + Math.random()*10, time);
+    osc.frequency.setValueAtTime(60, time);
     osc.type = "sine";
     gain.gain.setValueAtTime(1, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+    gain.gain.exponentialRampToValueAtTime(0.001, time+0.25);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start(time);
-    osc.stop(time + 0.25);
+    osc.stop(time+0.25);
 }
 
-// Snare/Clap
+// Snare mit Punch
 function playSnare(time){
     const bufferSize = audioCtx.sampleRate*0.25;
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -27,14 +27,14 @@ function playSnare(time){
     const noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
     const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.7+Math.random()*0.2, time);
-    gain.gain.exponentialRampToValueAtTime(0.001, time+0.2);
+    gain.gain.setValueAtTime(0.7, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time+0.25);
     noise.connect(gain);
     gain.connect(audioCtx.destination);
     noise.start(time);
 }
 
-// HiHat
+// HiHat shuffle
 function playHiHat(time){
     const bufferSize = audioCtx.sampleRate*0.05;
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -50,8 +50,8 @@ function playHiHat(time){
     noise.start(time);
 }
 
-// Bassline
-const bassNotes = [55, 65.41, 73.42, 82.41]; // A1-C2-D2-E2
+// Bassline rhythmisch
+const bassNotes = [55,65.41,73.42,82.41];
 function playBass(time){
     const note = bassNotes[Math.floor(Math.random()*bassNotes.length)];
     const osc = audioCtx.createOscillator();
@@ -66,8 +66,8 @@ function playBass(time){
     osc.stop(time+0.5);
 }
 
-// Lead / Melodie
-const leadNotes = [261.63, 293.66, 329.63, 349.23, 392.00]; // C4-G4
+// Lead/Melodie minimalistisch
+const leadNotes = [261.63,293.66,329.63,349.23,392.00];
 function playLead(time){
     if(Math.random()<0.35){
         const note = leadNotes[Math.floor(Math.random()*leadNotes.length)];
@@ -75,7 +75,7 @@ function playLead(time){
         const gain = audioCtx.createGain();
         osc.type = "sawtooth";
         osc.frequency.setValueAtTime(note, time);
-        gain.gain.setValueAtTime(0.1+Math.random()*0.15, time);
+        gain.gain.setValueAtTime(0.1+Math.random()*0.15,time);
         gain.gain.exponentialRampToValueAtTime(0.001, time+0.35);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -87,7 +87,7 @@ function playLead(time){
 // Beat Generator
 function generateBeat(){
     const now = audioCtx.currentTime;
-    const step = 0.25; // Viertelnoten
+    const step = 0.25;
     for(let i=0;i<16;i++){
         const time = now + i*step;
         if(i%4===0) playKick(time + Math.random()*0.02);
@@ -99,10 +99,10 @@ function generateBeat(){
 }
 
 // Start / Stop
-startBtn.addEventListener("click", ()=>{
+startBtn.addEventListener("click",()=>{
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     generateBeat();
     interval = setInterval(generateBeat,4000);
 });
 
-stopBtn.addEventListener("click",()=> clearInterval(interval));
+stopBtn.addEventListener("click",()=>clearInterval(interval));
