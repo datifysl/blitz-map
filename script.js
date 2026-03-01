@@ -3,8 +3,18 @@ const stopBtn = document.getElementById("stopBtn");
 
 let audioCtx;
 let interval;
+let rapInterval;
 
-// Kick Drum tief und rund
+// Zufällige Rap-Lines
+const rapLines = [
+    "Yo check den Beat, alles generativ!",
+    "Flow wie Souly, immer fresh.",
+    "Bass tief, Snare punchy, Kick on time.",
+    "Rhythmus groovt, wir bleiben high.",
+    "Loop wiederholt, Variation immer dabei."
+];
+
+// Beatfunktionen
 function playKick(time){
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
@@ -18,7 +28,6 @@ function playKick(time){
     osc.stop(time+0.25);
 }
 
-// Snare mit Punch
 function playSnare(time){
     const bufferSize = audioCtx.sampleRate*0.25;
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -34,7 +43,6 @@ function playSnare(time){
     noise.start(time);
 }
 
-// HiHat shuffle
 function playHiHat(time){
     const bufferSize = audioCtx.sampleRate*0.05;
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -50,7 +58,6 @@ function playHiHat(time){
     noise.start(time);
 }
 
-// Bassline rhythmisch
 const bassNotes = [55,65.41,73.42,82.41];
 function playBass(time){
     const note = bassNotes[Math.floor(Math.random()*bassNotes.length)];
@@ -66,7 +73,6 @@ function playBass(time){
     osc.stop(time+0.5);
 }
 
-// Lead/Melodie minimalistisch
 const leadNotes = [261.63,293.66,329.63,349.23,392.00];
 function playLead(time){
     if(Math.random()<0.35){
@@ -98,11 +104,25 @@ function generateBeat(){
     }
 }
 
+// TTS Rap Trigger
+function rapLine(){
+    const text = rapLines[Math.floor(Math.random()*rapLines.length)];
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.2; // schneller = rappiger
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+}
+
 // Start / Stop
 startBtn.addEventListener("click",()=>{
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     generateBeat();
     interval = setInterval(generateBeat,4000);
+    rapLine(); // sofort erste Line
+    rapInterval = setInterval(rapLine,4000); // neue Line pro Beat-Loop
 });
 
-stopBtn.addEventListener("click",()=>clearInterval(interval));
+stopBtn.addEventListener("click",()=>{
+    clearInterval(interval);
+    clearInterval(rapInterval);
+});
