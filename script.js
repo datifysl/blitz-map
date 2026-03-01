@@ -4,14 +4,14 @@ const stopBtn = document.getElementById("stopBtn");
 let audioCtx;
 let interval;
 
-// Drum-Samples
+// Drum / Beat Funktionen
 function playKick(time) {
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
     osc.frequency.setValueAtTime(100, time);
     osc.type = "sine";
-    gain.gain.setValueAtTime(1.0, time); // lauter
-    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25); // etwas länger
+    gain.gain.setValueAtTime(1.0, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start(time);
@@ -28,7 +28,7 @@ function playSnare(time) {
     const noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
     const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.8, time); // lauter
+    gain.gain.setValueAtTime(0.8, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
     noise.connect(gain);
     gain.connect(audioCtx.destination);
@@ -59,7 +59,7 @@ function playLead(time) {
     const gain = audioCtx.createGain();
     osc.type = "sawtooth";
     osc.frequency.setValueAtTime(note, time);
-    gain.gain.setValueAtTime(0.25, time); // hörbar
+    gain.gain.setValueAtTime(0.25, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
     osc.connect(gain);
     gain.connect(audioCtx.destination);
@@ -70,23 +70,21 @@ function playLead(time) {
 // Beat generieren
 function generateBeat() {
     const now = audioCtx.currentTime;
-    const beatInterval = 0.25; // Viertel-Noten
-
+    const beatInterval = 0.25; // Viertelnoten
     for (let i = 0; i < 16; i++) {
         const time = now + i * beatInterval;
-
-        if (i % 4 === 0 || i % 4 === 2) playKick(time);   // Kick auf 1 & 3
-        if (i % 4 === 1 || i % 4 === 3) playSnare(time); // Snare auf 2 & 4
-        playHiHat(time);                                   // HiHat auf jeden Schritt
-        if (Math.random() < 0.5) playLead(time);          // Lead zufällig
+        if (i % 4 === 0 || i % 4 === 2) playKick(time);
+        if (i % 4 === 1 || i % 4 === 3) playSnare(time);
+        playHiHat(time);
+        if (Math.random() < 0.5) playLead(time);
     }
 }
 
-// Start Button
+// Start Button: AudioContext erst hier erstellen!
 startBtn.addEventListener("click", () => {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     generateBeat(); // sofort starten
-    interval = setInterval(generateBeat, 4000); // Loop
+    interval = setInterval(generateBeat, 4000); // 16 Schritte pro Loop
 });
 
 // Stop Button
