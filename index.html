@@ -3,22 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personenalarm Kamera</title>
+<title>Personenalarm Neu</title>
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.4.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/ml5@2.3.0/dist/ml5.min.js"></script>
 </head>
 <body>
-<div id="container">
-    <h1>Personenalarm Kamera</h1>
-    <video id="video" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
-    <div id="info">
-        <p id="status">KI wird geladen...</p>
-    </div>
+<div class="app-container">
+    <header>
+        <h1>Personenalarm</h1>
+    </header>
+
+    <section class="video-section">
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas"></canvas>
+        <div id="status">KI wird geladen...</div>
+    </section>
+
+    <footer>
+        <p>Personenalarm Demo</p>
+    </footer>
 </div>
 
-<!-- Einfacher MP3 Platzhalter -->
 <audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
 
 <script src="script.js"></script>
