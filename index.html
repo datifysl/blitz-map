@@ -16,8 +16,11 @@
         <canvas id="qrcode"></canvas>
     </div>
     <div class="controls">
-        <button id="generateBtn">Neue Codes generieren</button>
-        <label><input type="checkbox" id="autoTick"> Sekündliche Generierung</label>
+        <label>Generierungen pro Sekunde: 
+            <input type="number" id="freqInput" value="1" min="1" max="10" step="1">
+        </label>
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
     </div>
 </div>
 <script src="script.js"></script>
