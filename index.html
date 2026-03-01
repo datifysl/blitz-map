@@ -3,30 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personenalarm Neu</title>
+<title>Zufällige Barcodes & QR-Codes</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.4.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/ml5@2.3.0/dist/ml5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body>
-<div class="app-container">
-    <header>
-        <h1>Personenalarm</h1>
-    </header>
-
-    <section class="video-section">
-        <video id="video" autoplay playsinline></video>
-        <canvas id="canvas"></canvas>
-        <div id="status">KI wird geladen...</div>
-    </section>
-
-    <footer>
-        <p>Personenalarm Demo</p>
-    </footer>
+<div class="container">
+    <h1>Barcode & QR-Code Generator</h1>
+    <div class="codes">
+        <svg id="barcode"></svg>
+        <canvas id="qrcode"></canvas>
+    </div>
+    <div class="controls">
+        <button id="generateBtn">Neue Codes generieren</button>
+        <label><input type="checkbox" id="autoTick"> Sekündliche Generierung</label>
+    </div>
 </div>
-
-<audio id="alarmSound" src="alarm.mp3" preload="auto"></audio>
-
 <script src="script.js"></script>
 </body>
 </html>
