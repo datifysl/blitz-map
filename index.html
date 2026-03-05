@@ -2,16 +2,168 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generativer Souly Beat + Rap</title>
-<link rel="stylesheet" href="style.css">
+<title>Vorhersage-Paradoxon Simulation</title>
+
+<style>
+body{
+font-family:Arial, sans-serif;
+background:#0f172a;
+color:white;
+text-align:center;
+}
+
+.container{
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:40px;
+}
+
+.panel{
+width:320px;
+padding:20px;
+border-radius:12px;
+background:#1e293b;
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+h2{
+margin-top:0;
+}
+
+.log{
+height:260px;
+overflow:auto;
+background:#020617;
+padding:10px;
+border-radius:8px;
+text-align:left;
+font-size:14px;
+}
+
+button{
+margin-top:20px;
+padding:10px 20px;
+font-size:16px;
+border:none;
+border-radius:8px;
+background:#3b82f6;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#2563eb;
+}
+
+.highlight{
+color:#22c55e;
+}
+
+.error{
+color:#ef4444;
+}
+</style>
 </head>
+
 <body>
+
+<h1>Vorhersage-Paradoxon Simulation</h1>
+<p>Ein Supercomputer versucht vorherzusagen, wann Philip schnipst.  
+Philip entscheidet sich immer bewusst gegen die Vorhersage.</p>
+
 <div class="container">
-    <h1>Generativer Souly Beat 🎶 + Rap</h1>
-    <button id="startBtn">Start</button>
-    <button id="stopBtn">Stop</button>
+
+<div class="panel">
+<h2>🔮 Vorhersager</h2>
+<div id="predictorLog" class="log"></div>
 </div>
-<script src="script.js"></script>
+
+<div class="panel">
+<h2>👤 Philip</h2>
+<div id="playerLog" class="log"></div>
+</div>
+
+</div>
+
+<button onclick="startSimulation()">Simulation starten</button>
+
+<script>
+
+function log(element,text,cls=""){
+let div=document.createElement("div")
+div.textContent=text
+if(cls) div.classList.add(cls)
+element.appendChild(div)
+element.scrollTop=element.scrollHeight
+}
+
+function philipChoice(prediction){
+let numbers=[1,5,12,42,88]
+
+for(let n of numbers){
+if(n!==prediction){
+return n
+}
+}
+}
+
+function startSimulation(){
+
+let pLog=document.getElementById("predictorLog")
+let playerLog=document.getElementById("playerLog")
+
+pLog.innerHTML=""
+playerLog.innerHTML=""
+
+let guess=1
+let steps=0
+let maxSteps=15
+
+log(pLog,"Starte Simulation...")
+
+function step(){
+
+steps++
+
+log(pLog,"Ich vermute: Philip wählt "+guess)
+
+let choice=philipChoice(guess)
+
+log(playerLog,"Vorhersage gehört: "+guess)
+log(playerLog,"Ich wähle absichtlich "+choice+" statt "+guess,"highlight")
+
+if(choice===guess){
+
+log(pLog,"Stabile Vorhersage gefunden: "+guess,"highlight")
+return
+
+}else{
+
+log(pLog,"Vorhersage falsch → Philip wählt "+choice,"error")
+log(pLog,"Neue Berechnung startet...")
+
+guess=choice
+
+if(steps>=maxSteps){
+
+log(pLog,"Keine stabile Lösung möglich.","error")
+log(pLog,"Selbstreferenz-Paradoxon erkannt.","error")
+return
+
+}
+
+setTimeout(step,800)
+
+}
+
+}
+
+setTimeout(step,800)
+
+}
+
+</script>
+
 </body>
 </html>
