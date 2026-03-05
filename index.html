@@ -2,48 +2,39 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Vorhersage-Paradoxon Simulation</title>
+<title>Unendliche Vorhersageberechnung</title>
 
 <style>
+
 body{
-font-family:Arial, sans-serif;
+font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
 }
 
-.container{
-display:flex;
-justify-content:center;
-gap:40px;
-margin-top:40px;
-}
-
 .panel{
-width:320px;
-padding:20px;
-border-radius:12px;
+width:800px;
+margin:auto;
+margin-top:40px;
+padding:25px;
 background:#1e293b;
-box-shadow:0 0 20px rgba(0,0,0,0.4);
-}
-
-h2{
-margin-top:0;
+border-radius:12px;
 }
 
 .log{
-height:260px;
+height:500px;
 overflow:auto;
 background:#020617;
-padding:10px;
+padding:15px;
 border-radius:8px;
 text-align:left;
-font-size:14px;
+font-size:15px;
 }
 
 button{
 margin-top:20px;
-padding:10px 20px;
+padding:12px 24px;
 font-size:16px;
 border:none;
 border-radius:8px;
@@ -52,114 +43,88 @@ color:white;
 cursor:pointer;
 }
 
-button:hover{
-background:#2563eb;
-}
+.green{color:#22c55e;}
+.red{color:#ef4444;}
+.blue{color:#38bdf8;}
 
-.highlight{
-color:#22c55e;
-}
-
-.error{
-color:#ef4444;
-}
 </style>
 </head>
 
 <body>
 
-<h1>Vorhersage-Paradoxon Simulation</h1>
-<p>Ein Supercomputer versucht vorherzusagen, wann Philip schnipst.  
-Philip entscheidet sich immer bewusst gegen die Vorhersage.</p>
-
-<div class="container">
+<h1>Der Vorhersager denkt weiter…</h1>
+<p>Der Vorhersager versucht eine Zukunftsaussage zu finden, die auch dann noch stimmt, wenn Philip sie hört.</p>
 
 <div class="panel">
-<h2>🔮 Vorhersager</h2>
-<div id="predictorLog" class="log"></div>
+<h2>Gedankengang des Vorhersagers</h2>
+<div id="log" class="log"></div>
+<button onclick="start()">Simulation starten</button>
 </div>
-
-<div class="panel">
-<h2>👤 Philip</h2>
-<div id="playerLog" class="log"></div>
-</div>
-
-</div>
-
-<button onclick="startSimulation()">Simulation starten</button>
 
 <script>
 
-function log(element,text,cls=""){
-let div=document.createElement("div")
-div.textContent=text
-if(cls) div.classList.add(cls)
-element.appendChild(div)
-element.scrollTop=element.scrollHeight
-}
+const numbers=[1,5,12,42,88]
 
-function philipChoice(prediction){
-let numbers=[1,5,12,42,88]
+let philipNumber=numbers[Math.floor(Math.random()*numbers.length)]
+
+function philipReaction(prediction){
+
+if(prediction===philipNumber){
 
 for(let n of numbers){
-if(n!==prediction){
-return n
-}
-}
+if(n!==prediction) return n
 }
 
-function startSimulation(){
+}
 
-let pLog=document.getElementById("predictorLog")
-let playerLog=document.getElementById("playerLog")
+return philipNumber
+}
 
-pLog.innerHTML=""
-playerLog.innerHTML=""
+function log(text,cls=""){
+let el=document.getElementById("log")
+let d=document.createElement("div")
+d.innerHTML=text
+if(cls)d.classList.add(cls)
+el.appendChild(d)
+el.scrollTop=el.scrollHeight
+}
 
-let guess=1
-let steps=0
-let maxSteps=15
+function start(){
 
-log(pLog,"Starte Simulation...")
+document.getElementById("log").innerHTML=""
 
-function step(){
+log("Philip hat bereits eine Zahl gewählt.","blue")
+log("Ich berechne eine Vorhersage, die auch dann stimmt, wenn ich sie ausspreche.","blue")
 
-steps++
+let step=0
 
-log(pLog,"Ich vermute: Philip wählt "+guess)
+function think(){
 
-let choice=philipChoice(guess)
+let guess=numbers[step % numbers.length]
 
-log(playerLog,"Vorhersage gehört: "+guess)
-log(playerLog,"Ich wähle absichtlich "+choice+" statt "+guess,"highlight")
+log("<br>Hypothese: Wenn ich '"+guess+"' vorhersage ...","green")
 
-if(choice===guess){
+let reaction=philipReaction(guess)
 
-log(pLog,"Stabile Vorhersage gefunden: "+guess,"highlight")
-return
+if(reaction!==guess){
+
+log("Dann würde Philip seine Zahl zu '"+reaction+"' ändern.","red")
+log("Also wäre meine Vorhersage falsch.","red")
+log("→ Neue Berechnung notwendig.","red")
 
 }else{
 
-log(pLog,"Vorhersage falsch → Philip wählt "+choice,"error")
-log(pLog,"Neue Berechnung startet...")
-
-guess=choice
-
-if(steps>=maxSteps){
-
-log(pLog,"Keine stabile Lösung möglich.","error")
-log(pLog,"Selbstreferenz-Paradoxon erkannt.","error")
-return
+log("Diese Vorhersage bleibt stabil.","green")
 
 }
 
-setTimeout(step,800)
+step++
+
+setTimeout(think,1200)
 
 }
 
-}
-
-setTimeout(step,800)
+setTimeout(think,1200)
 
 }
 
