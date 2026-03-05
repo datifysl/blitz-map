@@ -2,38 +2,66 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Unendliche Vorhersageberechnung</title>
+<title>Vorhersage Rückkopplung</title>
 
 <style>
 
 body{
+margin:0;
 font-family:Arial;
 background:#0f172a;
 color:white;
 text-align:center;
 }
 
-.panel{
-width:800px;
-margin:auto;
-margin-top:40px;
-padding:25px;
-background:#1e293b;
-border-radius:12px;
+h1{
+margin-top:30px;
 }
 
-.log{
-height:500px;
-overflow:auto;
+.container{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;
+margin-top:40px;
+}
+
+.box{
+width:260px;
+height:200px;
+background:#1e293b;
+border-radius:12px;
+padding:20px;
+position:relative;
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+.number{
+font-size:48px;
+margin-top:20px;
+transition:all 0.5s;
+}
+
+.arrow{
+font-size:50px;
+opacity:0.7;
+}
+
+.timeline{
+width:900px;
+margin:auto;
+margin-top:40px;
 background:#020617;
-padding:15px;
-border-radius:8px;
+border-radius:10px;
+height:250px;
+overflow:auto;
 text-align:left;
-font-size:15px;
+padding:15px;
+font-size:14px;
 }
 
 button{
-margin-top:20px;
+margin-top:30px;
 padding:12px 24px;
 font-size:16px;
 border:none;
@@ -43,29 +71,60 @@ color:white;
 cursor:pointer;
 }
 
-.green{color:#22c55e;}
-.red{color:#ef4444;}
-.blue{color:#38bdf8;}
+.step{
+margin-bottom:6px;
+}
+
+.predict{color:#22c55e;}
+.react{color:#f97316;}
+.calc{color:#38bdf8;}
 
 </style>
 </head>
 
 <body>
 
-<h1>Der Vorhersager denkt weiter…</h1>
-<p>Der Vorhersager versucht eine Zukunftsaussage zu finden, die auch dann noch stimmt, wenn Philip sie hört.</p>
+<h1>Selbstreferenz-Vorhersage</h1>
+<p>Der Vorhersager simuliert Philips Reaktion auf seine eigene Vorhersage.</p>
 
-<div class="panel">
-<h2>Gedankengang des Vorhersagers</h2>
-<div id="log" class="log"></div>
-<button onclick="start()">Simulation starten</button>
+<div class="container">
+
+<div class="box">
+<h3>🔮 Vorhersager</h3>
+<div id="prediction" class="number">?</div>
 </div>
+
+<div class="arrow">➡</div>
+
+<div class="box">
+<h3>👤 Philips Reaktion</h3>
+<div id="reaction" class="number">?</div>
+</div>
+
+</div>
+
+<button onclick="start()">Simulation starten</button>
+
+<div class="timeline" id="timeline"></div>
 
 <script>
 
 const numbers=[1,5,12,42,88]
 
 let philipNumber=numbers[Math.floor(Math.random()*numbers.length)]
+let step=0
+
+function log(text,cls){
+
+let line=document.createElement("div")
+line.className="step "+cls
+line.innerHTML=text
+
+let tl=document.getElementById("timeline")
+tl.appendChild(line)
+tl.scrollTop=tl.scrollHeight
+
+}
 
 function philipReaction(prediction){
 
@@ -80,51 +139,46 @@ if(n!==prediction) return n
 return philipNumber
 }
 
-function log(text,cls=""){
-let el=document.getElementById("log")
-let d=document.createElement("div")
-d.innerHTML=text
-if(cls)d.classList.add(cls)
-el.appendChild(d)
-el.scrollTop=el.scrollHeight
-}
-
 function start(){
 
-document.getElementById("log").innerHTML=""
-
-log("Philip hat bereits eine Zahl gewählt.","blue")
-log("Ich berechne eine Vorhersage, die auch dann stimmt, wenn ich sie ausspreche.","blue")
-
-let step=0
+step=0
+document.getElementById("timeline").innerHTML=""
 
 function think(){
 
 let guess=numbers[step % numbers.length]
 
-log("<br>Hypothese: Wenn ich '"+guess+"' vorhersage ...","green")
+document.getElementById("prediction").textContent=guess
+
+log("Vorhersager denkt: Wenn ich '"+guess+"' sage …","predict")
 
 let reaction=philipReaction(guess)
 
+setTimeout(()=>{
+
+document.getElementById("reaction").textContent=reaction
+
+log("Philip würde darauf '"+reaction+"' wählen.","react")
+
 if(reaction!==guess){
 
-log("Dann würde Philip seine Zahl zu '"+reaction+"' ändern.","red")
-log("Also wäre meine Vorhersage falsch.","red")
-log("→ Neue Berechnung notwendig.","red")
+log("→ Vorhersage wäre falsch → neue Berechnung.","calc")
 
 }else{
 
-log("Diese Vorhersage bleibt stabil.","green")
+log("→ Vorhersage wäre stabil.","calc")
 
 }
 
 step++
 
-setTimeout(think,1200)
+},600)
+
+setTimeout(think,1800)
 
 }
 
-setTimeout(think,1200)
+think()
 
 }
 
